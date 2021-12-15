@@ -1,0 +1,29 @@
+Steps:
+
+1) Build the java app with
+./gradlew distTar
+
+You can change the log4j2 version by modifying app/src/build.gradle where it says:
+```
+    runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.10.0'
+```
+If you do this, re-run this step and all subsequent steps.
+
+2) Then build the docker container
+docker build -f Dockerfile -t beatyourselfwithalog4j/app:latest .
+
+You can modify the Dockerfile to change JDK versions or environment variables.
+
+There are some common ones included (commented out) in the Dockerfile (JDK8/11/17).
+
+If you make this modification, re-run this step and all subsequent steps.
+
+3) Run the container
+
+docker run --network none -it beatyourselfwithalog4j/app:latest
+
+4) You will be prompted to enter a string, that will be logged via log4j2.  Try entering a string like:
+
+${jndi:ldap://localhost:9999}/a
+
+The java process also runs a TCP server at localhost:9999 that will log any inbound connections and print the contents.
